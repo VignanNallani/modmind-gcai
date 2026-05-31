@@ -96,7 +96,7 @@ class AnalysisRequest(BaseModel):
 async def fetch_reddit_json(url: str) -> Dict[str, Any]:
     """Fetch JSON data from Reddit's public API"""
     headers = {
-        "User-Agent": "ModMind/1.0 (by /u/vignan_chowdary)",
+        "User-Agent": "ModMind/1.0 by u/vignan-Chowdary123",
         "Accept": "application/json"
     }
     await asyncio.sleep(1)
