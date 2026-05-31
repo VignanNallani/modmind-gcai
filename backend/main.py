@@ -315,17 +315,19 @@ async def analyze_post(request: AnalysisRequest):
             analysis["action"] = analysis.get("suggested_action", "monitor")
 
         try:
-            decisions_collection.insert_one({
-                "post_id": post_data.get("id", ""),
-                "post_title": post_data.get("title", ""),
-                "subreddit": post_data.get("subreddit", ""),
-                "toxicity_score": analysis.get("toxicity_score", 0),
-                "sentiment": analysis.get("sentiment", ""),
-                "action": analysis.get("action", ""),
-                "analyzed_at": datetime.utcnow()
-            })
+            doc = {
+                "post_id": str(post_data.get("id", "unknown")),
+                "post_title": str(post_data.get("title", ""))[:200],
+                "subreddit": str(post_data.get("subreddit", "")),
+                "toxicity_score": float(result.toxicity_score),
+                "sentiment": str(result.sentiment),
+                "action": str(result.suggested_action),
+                "analyzed_at": datetime.utcnow().isoformat()
+            }
+            decisions_collection.insert_one(doc)
+            print(f"MongoDB write successful: {doc['post_id']}")
         except Exception as e:
-            print(f"MongoDB logging error: {e}")
+            print(f"MongoDB write failed: {str(e)}")
 
         return result
         
