@@ -96,12 +96,17 @@ class AnalysisRequest(BaseModel):
 async def fetch_reddit_json(url: str) -> Dict[str, Any]:
     """Fetch JSON data from Reddit's public API"""
     headers = {
-        "User-Agent": "ModMind/1.0 by u/vignan-Chowdary123",
-        "Accept": "application/json"
+        "User-Agent": "python:modmind:v1.0 (by /u/vignan-Chowdary123)",
+        "Accept": "application/json",
+        "Accept-Language": "en-US,en;q=0.9",
     }
     await asyncio.sleep(1)
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url, headers=headers, timeout=10.0)
+    async with httpx.AsyncClient(
+        headers=headers,
+        follow_redirects=True,
+        timeout=30.0
+    ) as client:
+        response = await client.get(url)
         response.raise_for_status()
         return response.json()
 
@@ -182,7 +187,7 @@ async def fetch_posts(
             "rising": "rising"
         }
         
-        url = f"https://www.reddit.com/r/{subreddit}/{sort_map[sort]}.json?limit={limit}"
+        url = f"https://www.reddit.com/r/{subreddit}/{sort_map[sort]}.json?limit={limit}&raw_json=1"
         data = await fetch_reddit_json(url)
         
         result = []
