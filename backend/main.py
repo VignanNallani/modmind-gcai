@@ -51,7 +51,8 @@ MONGODB_URI = os.environ.get("MONGODB_URI")
 mongo_client = MongoClient(
     MONGODB_URI,
     tls=True,
-    tlsAllowInvalidCertificates=True
+    tlsAllowInvalidCertificates=True,
+    serverSelectionTimeoutMS=5000
 )
 db = mongo_client["modmind"]
 decisions_collection = db["mod_decisions"]
