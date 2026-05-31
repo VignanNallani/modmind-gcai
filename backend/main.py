@@ -50,9 +50,11 @@ client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 MONGODB_URI = os.environ.get("MONGODB_URI")
 mongo_client = MongoClient(
     MONGODB_URI,
-    tls=True,
-    tlsAllowInvalidCertificates=True,
-    serverSelectionTimeoutMS=5000
+    ssl=True,
+    ssl_cert_reqs='CERT_NONE',
+    serverSelectionTimeoutMS=5000,
+    connectTimeoutMS=5000,
+    socketTimeoutMS=5000
 )
 db = mongo_client["modmind"]
 decisions_collection = db["mod_decisions"]
